@@ -1,8 +1,9 @@
-# TrabalhoFinalPPI
-## Trabalho Final de PPI Campeonato de E-Sports (League of legends)
-### Campeonato de E-Sports (League of Legends)
-### Um campeonato amador de e-sports é uma competição de jogos eletrônicos voltada para jogadores que não são profissionais, ou seja, não recebem remuneração fixa pela prática do jogo, participando principalmente por lazer, socialização eespírito competitivo. No contexto deste trabalho, considere um campeonato amador de League of Legends (LoL), em que equipes se inscrevem para disputar partidas organizadas pela coordenação do evento. As equipes podem ser formadas por amigos, colegas de faculdade ou membros de comunidades online, com foco em diversão e integração entre os participantes.  
-### Sabendo disso, imagine que você foi contratado para desenvolver uma aplicação web para ajudar na organização de um campeonato amador de League of Legends, permitindo que equipes e seus jogadores sejam cadastrados. Para isso, desenvolva esse serviço conforme orientações a seguir.
+# TrabalhoFinalPPI   
+
+### Trabalho Final de PPI Campeonato de E-Sports (League of legends)  
+#### Campeonato de E-Sports (League of Legends)  
+#### Um campeonato amador de e-sports é uma competição de jogos eletrônicos voltada para jogadores que não são profissionais, ou seja, não recebem remuneração fixa pela prática do jogo, participando principalmente por lazer, socialização eespírito competitivo. No contexto deste trabalho, considere um campeonato amador de League of Legends (LoL), em que equipes se inscrevem para disputar partidas organizadas pela coordenação do evento. As equipes podem ser formadas por amigos, colegas de faculdade ou membros de comunidades online, com foco em diversão e integração entre os participantes.   
+#### Sabendo disso, imagine que você foi contratado para desenvolver uma aplicação web para ajudar na organização de um campeonato amador de League of Legends, permitindo que equipes e seus jogadores sejam cadastrados. Para isso, desenvolva esse serviço conforme orientações a seguir.
 ---
 Desenvolva um sistema web para o controle de equipe x jogadores que atenda aos seguintes
 requisitos:
