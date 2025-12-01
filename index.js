@@ -10,6 +10,7 @@ var listaTimes = [];
 
 const server = express ();
 
+
 //Preparar o servidor para processar dados vindo no corpo da requisicao
 
 //aula 04 nos vamos estudar o uso de sessão e de cookies para o servidor e ao cliente
@@ -103,7 +104,7 @@ server.get("/", verificarUsuarioLogado, (requisicao, resposta) =>{
                 <form method="POST" action="/" class="m-3 p-4 bg-light rounded shadow-sm col-md-6 mx-auto">
                     <div class="m-3 p-4 bg-light rounded shadow-sm col-md-6 mx-auto text-center">
                         <h2 class="mb-4">Bem-vindo!</h2>
-                        <h2>Ola: ${requisicao.session.dadosLogin?.nome}</h2>
+                        <h3>Ola, ${requisicao.session.dadosLogin?.nome}</h3>
                         <p class="fs-5">
                             Seja bem-vindo ao sistema! Use o menu acima para navegar entre as opções.
                         </p>
@@ -124,7 +125,7 @@ server.get("/", verificarUsuarioLogado, (requisicao, resposta) =>{
         resposta.end();
 });
 
-server.get("/cadastroEquipes", verificarUsuarioLogado, (requisicao,resposta) =>{
+server.get("/cadastroEquipes", (requisicao,resposta) =>{
         resposta.send(`
 <!doctype html>
 <html lang="pt-br">
@@ -165,54 +166,39 @@ server.get("/cadastroEquipes", verificarUsuarioLogado, (requisicao,resposta) =>{
     </nav>
 
     <div class="container">
-        <h1 class="text-center border m-3 p-3 bg-light">Cadastro de Produto</h1>
+        <h1 class="text-center border m-3 p-3 bg-light"Cadastro de Time</h1>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <form method="POST" action="/cadastroEquipes" class="row g-3 needs-validation m-3 p-3 bg-light">
+                        <div class="input-group has-validation">
 
-        <form method="POST" action="/cadastroEquipes" class="row g-3 needs-validation m-3 p-3 bg-light">
+                        <div class="col-md-10">
+                            <label for="time" class="form-label">Time</label>
+                            <input type="text" class="form-control" id="time" name="time" placeholder="Nome do Time">
+                        </div>
 
-            <div class="col-md-4">
-                <label for="codigoBarras" class="form-label">Código de Barras</label>
-                <input type="text" class="form-control" id="codigoBarras" name="codigoBarras">
+                        <div class="col-md-10">
+                            <label for="capitao" class="form-label">Capitao</label>
+                            <input type="text" class="form-control" id="capitao" name="capitao" placeholder="Nome do capitao">
+                        </div>
+
+                        <div class="col-md-10">
+                            <label for="tel" class="form-label">Whatsapp</label>
+                            <input type="text" step="0.01" class="form-control" id="tel" name="tel" maxlength="15" placeholder="Whatsapp">
+                        </div>
+                        <div class="col-12">
+                            <div class="col-12">
+                                <br>
+                                <button class="btn btn-primary" type="submit">Cadastrar</button>
+                                <a class="btn btn-secondary" href="/">Voltar</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="col-md-8">
-                <label for="descricao" class="form-label">Descrição do Produto</label>
-                <input type="text" class="form-control" id="descricao" name="descricao">
-            </div>
-
-            <div class="col-md-4">
-                <label for="precoCusto" class="form-label">Preço de Custo</label>
-                <input type="number" step="0.01" class="form-control" id="precoCusto" name="precoCusto">
-            </div>
-
-            <div class="col-md-4">
-                <label for="precoVenda" class="form-label">Preço de Venda</label>
-                <input type="number" step="0.01" class="form-control" id="precoVenda" name="precoVenda">
-            </div>
-
-            <div class="col-md-4">
-                <label for="validade" class="form-label">Data de Validade</label>
-                <input type="date" class="form-control" id="validade" name="validade">
-            </div>
-
-            <div class="col-md-4">
-                <label for="estoque" class="form-label">Quantidade em Estoque</label>
-                <input type="number" class="form-control" id="estoque" name="estoque">
-            </div>
-
-            <div class="col-md-8">
-                <label for="fabricante" class="form-label">Nome do Fabricante</label>
-                <input type="text" class="form-control" id="fabricante" name="fabricante">
-            </div>
-
-            <div class="col-12">
-                <br>
-                <button class="btn btn-primary" type="submit">Cadastrar</button>
-                <a class="btn btn-secondary" href="/">Voltar</a>
-            </div>
-
-        </form>
+        </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
@@ -220,17 +206,14 @@ server.get("/cadastroEquipes", verificarUsuarioLogado, (requisicao,resposta) =>{
 `);
 });
 
-server.post("/cadastroEquipes", verificarUsuarioLogado, (requisicao, resposta) =>{
-const codigoBarras = requisicao.body.codigoBarras;
-const descricao = requisicao.body.descricao;
-const precoCusto = requisicao.body.precoCusto;
-const precoVenda = requisicao.body.precoVenda;
-const validade = requisicao.body.validade;
-const estoque = requisicao.body.estoque;
-const fabricante = requisicao.body.fabricante;
+server.post("/cadastroEquipes", (requisicao, resposta) =>{
+const time = requisicao.body.time;
+const capitao = requisicao.body.capitao;
+const tel = requisicao.body.tel;
 
-if (codigoBarras && descricao && precoCusto && precoVenda && validade && estoque && fabricante) {
-    listaTime.push({ codigoBarras, descricao, precoCusto, precoVenda, validade, estoque, fabricante });
+
+if (time && capitao && tel) {
+    listaTime.push({ time, capitao, tel });
     resposta.redirect("/listaTime");
 }
 else {
@@ -244,109 +227,58 @@ else {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
+    <div class="container">
+        <h1 class="text-center border m-3 p-3 bg-light">Cadastro de Time</h1>
         <div class="container">
-            <h1 class="text-center border m-3 p-3 bg-light">Cadastro de Produto</h1>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <form method="POST" action="/cadastroEquipes" class="row g-3 needs-validation m-3 p-3 bg-light">
 
-            <form method="POST" action="/cadastroEquipes" class="row g-3 needs-validation m-3 p-3 bg-light">
+                    <div class="col-md-10">
+                        <label for="time" class="form-label">Time</label>
+                        <input type="text" class="form-control" id="time" name="time" placeholder="Nome do Time" value="${time}">
+                    `;
+                    if (!time) {
+                        conteudo += `
+                            <div>
+                                <p class="text-danger">Por favor, informe o nome do time.</p>
+                            </div>`;
+                    }
+            conteudo +=`</div>
 
-                <div class="col-md-4">
-                    <label for="codigoBarras" class="form-label">Código de Barras</label>
-                    <input type="text" class="form-control" id="codigoBarras" name="codigoBarras" value="${codigoBarras}">
-    `;
-    if (!codigoBarras) {
-        conteudo += `
-            <div>
-                <p class="text-danger">Por favor, informe o código de barras.</p>
-            </div>`;
-    }
-    conteudo += `</div>
-
-                <div class="col-md-8">
-                    <label for="descricao" class="form-label">Descrição do Produto</label>
-                    <input type="text" class="form-control" id="descricao" name="descricao" value="${descricao}">
-    `;
-    if (!descricao) {
-        conteudo += `
-            <div>
-                <p class="text-danger">Por favor, informe a descrição do produto.</p>
-            </div>`;
-    }
-    conteudo += `</div>
-
-                <div class="col-md-4">
-                    <label for="precoCusto" class="form-label">Preço de Custo</label>
-                    <input type="number" step="0.01" class="form-control" id="precoCusto" name="precoCusto" value="${precoCusto}">
-    `;
-    if (!precoCusto) {
-        conteudo += `
-            <div>
-                <p class="text-danger">Por favor, informe o preço de custo.</p>
-            </div>`;
-    }
-    conteudo += `</div>
-
-                <div class="col-md-4">
-                    <label for="precoVenda" class="form-label">Preço de Venda</label>
-                    <input type="number" step="0.01" class="form-control" id="precoVenda" name="precoVenda" value="${precoVenda}">
-    `;
-    if (!precoVenda) {
-        conteudo += `
-            <div>
-                <p class="text-danger">Por favor, informe o preço de venda.</p>
-            </div>`;
-    }
-    conteudo += `</div>
-
-                <div class="col-md-4">
-                    <label for="validade" class="form-label">Data de Validade</label>
-                    <input type="date" class="form-control" id="validade" name="validade" value="${validade}">
-    `;
-    if (!validade) {
-        conteudo += `
-            <div>
-                <p class="text-danger">Por favor, informe a data de validade.</p>
-            </div>`;
-    }
-    conteudo += `</div>
-
-                <div class="col-md-4">
-                    <label for="estoque" class="form-label">Quantidade em Estoque</label>
-                    <input type="number" class="form-control" id="estoque" name="estoque" value="${estoque}">
-    `;
-    if (!estoque) {
-        conteudo += `
-            <div>
-                <p class="text-danger">Por favor, informe a quantidade em estoque.</p>
-            </div>`;
-    }
-    conteudo += `</div>
-
-                <div class="col-md-8">
-                    <label for="fabricante" class="form-label">Fabricante</label>
-                    <input type="text" class="form-control" id="fabricante" name="fabricante" value="${fabricante}">
-    `;
-    if (!fabricante) {
-        conteudo += `
-            <div>
-                <p class="text-danger">Por favor, informe o fabricante.</p>
-            </div>`;
-    }
-
-    conteudo += `
+                    <div class="col-md-10">
+                        <label for="capitao" class="form-label">Capitao</label>
+                        <input type="text" class="form-control" id="capitao" name="capitao" placeholder="Nome do capitao" value="${capitao}">
+                    `;
+                    if (!capitao) {
+                        conteudo += `
+                            <div>
+                                <p class="text-danger">Por favor, informe o nome do capitao.</p>
+                            </div>`;
+                    }
+            conteudo +=`</div>
+                    <div class="col-md-10">
+                        <label for="tel" class="form-label">Whatsapp</label>
+                        <input type="text" step="0.01" class="form-control" id="tel" name="tel" maxlength="15" placeholder="Whatsapp" value="${tel}">
+                    `;
+                    if (!tel) {
+                        conteudo += `
+                            <div>
+                                <p class="text-danger">Por favor, informe o Whatsapp.</p>
+                            </div>`;
+                    }
+            conteudo +=`</div>
+                    <div class="col-12">
+                        <div class="col-12">
+                            <br>
+                            <button class="btn btn-primary" type="submit">Cadastrar</button>
+                            <a class="btn btn-secondary" href="/">Voltar</a>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="col-12">
-                    <br>
-                    <button class="btn btn-primary" type="submit">Cadastrar</button>
-                    <a class="btn btn-secondary" href="/">Voltar</a>
-                </div>
-
-            </form>
+            </div>
         </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
-    </html>
+    </div>
 `;
         resposta.send(conteudo);
 }
@@ -404,7 +336,7 @@ server.get("/cadastroJogadores", verificarUsuarioLogado, (requisicao,resposta) =
 
             <div class="col-md-8">
                 <label for="descricao" class="form-label">Descrição do Produto</label>
-                <input type="text" class="form-control" id="descricao" name="descricao">
+                <input type="text" class="form-control" id="descricao" name="descricao" ">
             </div>
 
             <div class="col-md-4">
