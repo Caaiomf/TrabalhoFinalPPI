@@ -4,7 +4,7 @@ import session from "express-session";
 
 const host = "0.0.0.0";
 const porta =3000;
-var listaTimes = [];
+var listaTime = [];
 
 //var usuarioLogado = false; // isso é errado
 
@@ -40,7 +40,7 @@ server.use(express.urlencoded({extended: true}));
 //preparar o servidor a fim de processar os cookies
 server.use(cookieParser());
 
-server.get("/", verificarUsuarioLogado, (requisicao, resposta) =>{
+server.get("/", (requisicao, resposta) =>{
 //disponilizar o menu para o usuario
 //verificar a existencia do cookie
     let ultimoAcesso = requisicao.cookies?.ultimoAcesso;
@@ -55,71 +55,168 @@ server.get("/", verificarUsuarioLogado, (requisicao, resposta) =>{
     resposta.cookie("ultimoAcesso", data.toLocaleString());
     resposta.setHeader("Content-Type", "text/html");
     resposta.write(`  
-        <!doctype html>
-        <html lang="pt-br">
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Menu</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        </head>
-        <body>
-                <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="/">Menu</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Cadastro
-                        </a>
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Menu</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-preto: #000000;
+            --bg-escuro: #111111;
+            --texto-branco: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-preto);
+            color: var(--texto-branco);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            background-color: #000 ;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 0 10px #ffffff33;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffffff ;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #fff ;
+            text-shadow: 0 0 8px #ffffffbb;
+        }
+
+        .dropdown-menu {
+            background-color: #000;
+            border: 1px solid #fff;
+        }
+
+        .dropdown-menu a {
+            color: var(--texto-branco);
+        }
+
+        h1 {
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            background-color: #111;
+            text-shadow: 0 0 12px #ffffff55;
+        }
+
+        .bg-light {
+            background-color: #111 ;
+            color: #ffffff ;
+            border: 2px solid #ffffff33;
+        }
+
+        input {
+            background-color: #1a1a1a ;
+            color: #ffffff ;
+            border: 1px solid #555 ;
+        }
+
+        input::placeholder {
+            color: #bbbbbb ;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #e6e6e6;
+            box-shadow: 0 0 10px #ffffffaa;
+        }
+
+        .btn-secondary {
+            background-color: #222;
+            border: 1px solid #fff;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #111;
+            box-shadow: 0 0 10px #ffffff88;
+        }
+    </style>
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+
+            <a class="navbar-brand" href="/">Menu</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Cadastro</a>
+
                         <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="nav-link active" href="/cadastroTime">Cadastro Times</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/cadastroJogadores">Cadastro Jogadores</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/listaTime">Listar Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroTime">Cadastro Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro Jogadores</a></li>
+                            <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                         </ul>
-                        <li class="nav-item">
-                        <a class="nav-link active" aria-current="/" href="/logout">Sair</a>
-                        </li>
-                    </ul>
-                    </div>
-                </div>
-                <div class ="container-fluid">
-                    <div class="dflex">
-                        <div class ="p-2">
-                            <p> Usuário logado: ${requisicao.session.dadosLogin?.nome}</p>
-                        </div> 
-                    </div>
-                </div>
-                </nav>
-                <div class="container">
-                <h1 class="text-center border m-3 p-3 bg-light">Login</h1>
+                    </li>
 
-                <form method="POST" action="/" class="m-3 p-4 bg-light rounded shadow-sm col-md-6 mx-auto">
-                    <div class="m-3 p-4 bg-light rounded shadow-sm col-md-6 mx-auto text-center">
-                        <h2 class="mb-4">Bem-vindo!</h2>
-                        <h3>Ola, ${requisicao.session.dadosLogin?.nome}</h3>
-                        <p class="fs-5">
-                            Seja bem-vindo ao sistema! Use o menu acima para navegar entre as opções.
-                        </p>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/logout">Sair</a>
+                    </li>
 
-                        <div class="mt-4">
-                            <a href="/cadastroEquipes" class="btn btn-primary m-2">Cadastro Equipes</a>
-                            <a href="/cadastroJogadores" class="btn btn-primary m-2">Cadastro Jogador</a>
-                            <a href="/listaTime" class="btn btn-secondary m-2">Listar Times</a>
-                        </div>
-                    </div>
-                </form>
+                </ul>
             </div>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-            </body>
-            </html>
+        </div>
+
+        <div class="container-fluid mt-2">
+            <p class="ms-3">Usuário logado: ${requisicao.session.dadosLogin?.nome} ultimo acesso: ${ultimoAcesso || "Primeiro Acesso"}</p>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-center m-3 p-3">Menu Principal</h1>
+
+        <div class="box-dark mt-4 col-md-6 mx-auto text-center">
+
+            <h2 class="mb-3">Bem-vindo!</h2>
+
+            <h3>Olá, ${requisicao.session.dadosLogin?.nome}</h3>
+
+            <p class="fs-5 mt-3">
+                Seja bem-vindo ao sistema! Use o menu acima para navegar entre as opções.
+            </p>
+
+            <div class="mt-4">
+                <a href="/cadastroEquipes" class="btn btn-primary m-2">Cadastro Equipes</a>
+                <a href="/cadastroJogadores" class="btn btn-primary m-2">Cadastro Jogador</a>
+                <a href="/listaTime" class="btn btn-secondary m-2">Listar Times</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
         `);
 
         resposta.end();
@@ -132,33 +229,123 @@ server.get("/cadastroEquipes", (requisicao,resposta) =>{
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cadastro Produto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Cadastro Time - LoL Theme</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-preto: #000000;
+            --bg-escuro: #111111;
+            --texto-branco: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-preto);
+            color: var(--texto-branco);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            background-color: #000 ;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 0 10px #ffffff33;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffffff ;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #fff ;
+            text-shadow: 0 0 8px #ffffffbb;
+        }
+
+        .dropdown-menu {
+            background-color: #000;
+            border: 1px solid #fff;
+        }
+
+        .dropdown-menu a {
+            color: var(--texto-branco);
+        }
+
+        h1 {
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            background-color: #111;
+            text-shadow: 0 0 12px #ffffff55;
+        }
+
+        .bg-light {
+            background-color: #111 ;
+            color: #ffffff ;
+            border: 2px solid #ffffff33;
+        }
+
+        input {
+            background-color: #1a1a1a ;
+            color: #ffffff ;
+            border: 1px solid #555 ;
+        }
+
+        input::placeholder {
+            color: #bbbbbb ;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #e6e6e6;
+            box-shadow: 0 0 10px #ffffffaa;
+        }
+
+        .btn-secondary {
+            background-color: #222;
+            border: 1px solid #fff;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #111;
+            box-shadow: 0 0 10px #ffffff88;
+        }
+    </style>
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Menu</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="/">Campeonato LoL</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        <a class="nav-link" href="/">Home</a>
                     </li>
+
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                             Cadastro
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="nav-link active" href="/cadastroTime">Cadastro Times</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/cadastroJogadores">Cadastro Jogadores</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/listaTime">Listar Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroTime">Cadastro de Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro de Jogadores</a></li>
+                            <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                         </ul>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="/" href="/logout">Sair</a>
+                        <a class="nav-link" href="/logout">Sair</a>
                     </li>
                 </ul>
             </div>
@@ -166,42 +353,40 @@ server.get("/cadastroEquipes", (requisicao,resposta) =>{
     </nav>
 
     <div class="container">
-        <h1 class="text-center border m-3 p-3 bg-light"Cadastro de Time</h1>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-8 col-lg-6">
-                    <form method="POST" action="/cadastroEquipes" class="row g-3 needs-validation m-3 p-3 bg-light">
-                        <div class="input-group has-validation">
+        <h1 class="text-center m-3 p-3">Cadastro de Time</h1>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card-lol">
+                    <form method="POST" action="/cadastroEquipes" class="row g-3">
 
-                        <div class="col-md-10">
-                            <label for="time" class="form-label">Time</label>
-                            <input type="text" class="form-control" id="time" name="time" placeholder="Nome do Time">
+                        <div class="col-md-12">
+                            <label class="form-label">Time</label>
+                            <input type="text" class="form-control" name="time" placeholder="Nome do Time">
                         </div>
 
-                        <div class="col-md-10">
-                            <label for="capitao" class="form-label">Capitao</label>
-                            <input type="text" class="form-control" id="capitao" name="capitao" placeholder="Nome do capitao">
+                        <div class="col-md-12">
+                            <label class="form-label">Capitão</label>
+                            <input type="text" class="form-control" name="capitao" placeholder="Nome do Capitão">
                         </div>
 
-                        <div class="col-md-10">
-                            <label for="tel" class="form-label">Whatsapp</label>
-                            <input type="text" step="0.01" class="form-control" id="tel" name="tel" maxlength="15" placeholder="Whatsapp">
+                        <div class="col-md-12">
+                            <label class="form-label">Whatsapp</label>
+                            <input type="text" class="form-control" name="tel" maxlength="15" placeholder="Whatsapp">
                         </div>
-                        <div class="col-12">
-                            <div class="col-12">
-                                <br>
-                                <button class="btn btn-primary" type="submit">Cadastrar</button>
-                                <a class="btn btn-secondary" href="/">Voltar</a>
-                            </div>
+
+                        <div class="col-12 mt-3">
+                            <button class="btn btn-primary" type="submit">Cadastrar</button>
+                            <a class="btn btn-secondary" href="/">Voltar</a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 
 `);
 });
@@ -218,25 +403,144 @@ if (time && capitao && tel) {
 }
 else {
     let conteudo = `
-    <!doctype html>
-    <html lang="pt-br">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Cadastro de Produto</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-    <div class="container">
-        <h1 class="text-center border m-3 p-3 bg-light">Cadastro de Time</h1>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-8 col-lg-6">
-                    <form method="POST" action="/cadastroEquipes" class="row g-3 needs-validation m-3 p-3 bg-light">
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cadastro Time - LoL Theme</title>
 
-                    <div class="col-md-10">
-                        <label for="time" class="form-label">Time</label>
-                        <input type="text" class="form-control" id="time" name="time" placeholder="Nome do Time" value="${time}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-preto: #000000;
+            --bg-escuro: #111111;
+            --texto-branco: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-preto);
+            color: var(--texto-branco);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            background-color: #000 ;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 0 10px #ffffff33;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffffff ;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #fff ;
+            text-shadow: 0 0 8px #ffffffbb;
+        }
+
+        .dropdown-menu {
+            background-color: #000;
+            border: 1px solid #fff;
+        }
+
+        .dropdown-menu a {
+            color: var(--texto-branco);
+        }
+
+        h1 {
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            background-color: #111;
+            text-shadow: 0 0 12px #ffffff55;
+        }
+
+        .bg-light {
+            background-color: #111 ;
+            color: #ffffff;
+            border: 2px solid #ffffff33;
+        }
+
+        input {
+            background-color: #1a1a1a !;
+            color: #ffffff ;
+            border: 1px solid #555 ;
+        }
+
+        input::placeholder {
+            color: #bbbbbb ;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #e6e6e6;
+            box-shadow: 0 0 10px #ffffffaa;
+        }
+
+        .btn-secondary {
+            background-color: #222;
+            border: 1px solid #fff;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #111;
+            box-shadow: 0 0 10px #ffffff88;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Campeonato LoL</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            Cadastro
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/cadastroTime">Cadastro de Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro de Jogadores</a></li>
+                            <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Sair</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-center m-3 p-3">Cadastro de Time</h1>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card-lol">
+                    <form method="POST" action="/cadastroEquipes" class="row g-3">
+
+                        <div class="col-md-12">
+                            <label class="form-label">Time</label>
+                            <input type="text" class="form-control" name="time" placeholder="Nome do Time" value="${time}">
                     `;
                     if (!time) {
                         conteudo += `
@@ -246,7 +550,7 @@ else {
                     }
             conteudo +=`</div>
 
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <label for="capitao" class="form-label">Capitao</label>
                         <input type="text" class="form-control" id="capitao" name="capitao" placeholder="Nome do capitao" value="${capitao}">
                     `;
@@ -257,7 +561,7 @@ else {
                             </div>`;
                     }
             conteudo +=`</div>
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <label for="tel" class="form-label">Whatsapp</label>
                         <input type="text" step="0.01" class="form-control" id="tel" name="tel" maxlength="15" placeholder="Whatsapp" value="${tel}">
                     `;
@@ -268,9 +572,7 @@ else {
                             </div>`;
                     }
             conteudo +=`</div>
-                    <div class="col-12">
-                        <div class="col-12">
-                            <br>
+                          <div class="col-12 mt-3">
                             <button class="btn btn-primary" type="submit">Cadastrar</button>
                             <a class="btn btn-secondary" href="/">Voltar</a>
                         </div>
@@ -291,33 +593,123 @@ server.get("/cadastroJogadores", verificarUsuarioLogado, (requisicao,resposta) =
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cadastro Produto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Cadastro Time - LoL Theme</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-preto: #000000;
+            --bg-escuro: #111111;
+            --texto-branco: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-preto);
+            color: var(--texto-branco);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            background-color: #000 ;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 0 10px #ffffff33;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffffff ;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #fff ;
+            text-shadow: 0 0 8px #ffffffbb;
+        }
+
+        .dropdown-menu {
+            background-color: #000;
+            border: 1px solid #fff;
+        }
+
+        .dropdown-menu a {
+            color: var(--texto-branco);
+        }
+
+        h1 {
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            background-color: #111;
+            text-shadow: 0 0 12px #ffffff55;
+        }
+
+        .bg-light {
+            background-color: #111 ;
+            color: #ffffff ;
+            border: 2px solid #ffffff33;
+        }
+
+        input {
+            background-color: #1a1a1a ;
+            color: #ffffff ;
+            border: 1px solid #555 ;
+        }
+
+        input::placeholder {
+            color: #bbbbbb ;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #e6e6e6;
+            box-shadow: 0 0 10px #ffffffaa;
+        }
+
+        .btn-secondary {
+            background-color: #222;
+            border: 1px solid #fff;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #111;
+            box-shadow: 0 0 10px #ffffff88;
+        }
+    </style>
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Menu</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="/">Campeonato LoL</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        <a class="nav-link" href="/">Home</a>
                     </li>
+
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                             Cadastro
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="nav-link active" href="/cadastroTime">Cadastro Times</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/cadastroJogadores">Cadastro Jogadores</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/listaTime">Listar Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroTime">Cadastro de Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro de Jogadores</a></li>
+                            <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                         </ul>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="/" href="/logout">Sair</a>
+                        <a class="nav-link" href="/logout">Sair</a>
                     </li>
                 </ul>
             </div>
@@ -325,62 +717,43 @@ server.get("/cadastroJogadores", verificarUsuarioLogado, (requisicao,resposta) =
     </nav>
 
     <div class="container">
-        <h1 class="text-center border m-3 p-3 bg-light">Cadastro de Produto</h1>
+        <h1 class="text-center m-3 p-3">Cadastro de Time</h1>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card-lol">
+                    <form method="POST" action="/cadastroEquipes" class="row g-3">
 
-        <form method="POST" action="/cadastroJogadores" class="row g-3 needs-validation m-3 p-3 bg-light">
+                        <div class="col-md-12">
+                            <label class="form-label">Time</label>
+                            <input type="text" class="form-control" name="time" placeholder="Nome do Time">
+                        </div>
 
-            <div class="col-md-4">
-                <label for="codigoBarras" class="form-label">Código de Barras</label>
-                <input type="text" class="form-control" id="codigoBarras" name="codigoBarras">
+                        <div class="col-md-12">
+                            <label class="form-label">Capitão</label>
+                            <input type="text" class="form-control" name="capitao" placeholder="Nome do Capitão">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Whatsapp</label>
+                            <input type="text" class="form-control" name="tel" maxlength="15" placeholder="Whatsapp">
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <button class="btn btn-primary" type="submit">Cadastrar</button>
+                            <a class="btn btn-secondary" href="/">Voltar</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="col-md-8">
-                <label for="descricao" class="form-label">Descrição do Produto</label>
-                <input type="text" class="form-control" id="descricao" name="descricao" ">
-            </div>
-
-            <div class="col-md-4">
-                <label for="precoCusto" class="form-label">Preço de Custo</label>
-                <input type="number" step="0.01" class="form-control" id="precoCusto" name="precoCusto">
-            </div>
-
-            <div class="col-md-4">
-                <label for="precoVenda" class="form-label">Preço de Venda</label>
-                <input type="number" step="0.01" class="form-control" id="precoVenda" name="precoVenda">
-            </div>
-
-            <div class="col-md-4">
-                <label for="validade" class="form-label">Data de Validade</label>
-                <input type="date" class="form-control" id="validade" name="validade">
-            </div>
-
-            <div class="col-md-4">
-                <label for="estoque" class="form-label">Quantidade em Estoque</label>
-                <input type="number" class="form-control" id="estoque" name="estoque">
-            </div>
-
-            <div class="col-md-8">
-                <label for="fabricante" class="form-label">Nome do Fabricante</label>
-                <input type="text" class="form-control" id="fabricante" name="fabricante">
-            </div>
-
-            <div class="col-12">
-                <br>
-                <button class="btn btn-primary" type="submit">Cadastrar</button>
-                <a class="btn btn-secondary" href="/">Voltar</a>
-            </div>
-
-        </form>
+        </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
 `);
 });
 
-server.post("/cadastroJogadores", verificarUsuarioLogado, (requisicao, resposta) =>{
+server.post("/cadastroJogadores", (requisicao, resposta) =>{
 const codigoBarras = requisicao.body.codigoBarras;
 const descricao = requisicao.body.descricao;
 const precoCusto = requisicao.body.precoCusto;
@@ -511,99 +884,175 @@ else {
         resposta.send(conteudo);
 }
 });
-server.get("/listaTime", verificarUsuarioLogado, (requisicao, resposta) => {
+server.get("/listaTime", (requisicao, resposta) => {
     let conteudo = `
-        <!doctype html>
-        <html lang="pt-br">
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Lista de Produtos do Sistema</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-        </head>
-        <body>
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Times Cadastrados</title>
 
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="/">Menu</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
-                        aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/">Home</a>
-                            </li>
-
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" 
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Cadastro
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item"><a class="nav-link active" href="/cadastroTime">Cadastro Times</a></li>
-                                    <li class="nav-item"><a class="nav-link active" href="/cadastroJogadores">Cadastro Jogadores</a></li>
-                                    <li class="nav-item"><a class="nav-link active" href="/listaTime">Listar Times</a></li>
-                                </ul>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link active" href="/logout">Sair</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-            <div class="container mt-5">
-                <h2 class="text-center mb-4">Lista de Produtos Cadastrados</h2>
-
-                <div class="table-responsive shadow-sm rounded-3">
-                    <table class="table table-striped table-hover align-middle">
-                        <thead class="table-primary text-center">
-                            <tr>
-                                <th>Código de Barras</th>
-                                <th>Descrição</th>
-                                <th>Preço de Custo</th>
-                                <th>Preço de Venda</th>
-                                <th>Validade</th>
-                                <th>Estoque</th>
-                                <th>Fabricante</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-produtos">`;
-
-        for (let i = 0; i < listaTime.length; i++) {
-            conteudo += `
-                <tr>
-                    <td>${listaTime[i].codigoBarras}</td>
-                    <td>${listaTime[i].descricao}</td>
-                    <td>R$ ${parseFloat(listaTime[i].precoCusto).toFixed(2)}</td>
-                    <td>R$ ${parseFloat(listaTime[i].precoVenda).toFixed(2)}</td>
-                    <td>${listaTime[i].validade}</td>
-                    <td>${listaTime[i].estoque}</td>
-                    <td>${listaTime[i].fabricante}</td>
-                </tr>
-            `;
+    <style>
+        :root {
+            --bg-preto: #000000;
+            --bg-escuro: #111111;
+            --texto-branco: #ffffff;
         }
 
+        body {
+            background-color: var(--bg-preto);
+            color: var(--texto-branco);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            background-color: #000 ;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 0 10px #ffffff33;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffffff ;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #fff ;
+            text-shadow: 0 0 8px #ffffffbb;
+        }
+
+        .dropdown-menu {
+            background-color: #000;
+            border: 1px solid #fff;
+        }
+
+        .dropdown-menu a {
+            color: var(--texto-branco);
+        }
+
+        h1 {
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            background-color: #111;
+            text-shadow: 0 0 12px #ffffff55;
+        }
+
+        .bg-light {
+            background-color: #111 ;
+            color: #ffffff ;
+            border: 2px solid #ffffff33;
+        }
+
+        input {
+            background-color: #1a1a1a ;
+            color: #ffffff ;
+            border: 1px solid #555 ;
+        }
+
+        input::placeholder {
+            color: #bbbbbb ;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #e6e6e6;
+            box-shadow: 0 0 10px #ffffffaa;
+        }
+
+        .btn-secondary {
+            background-color: #222;
+            border: 1px solid #fff;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #111;
+            box-shadow: 0 0 10px #ffffff88;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Menu</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Cadastro</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/cadastroTime">Cadastro Times</a></li>
+                        <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro Jogadores</a></li>
+                        <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Sair</a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+
+    <h1 class="text-center m-3 p-3">Times Cadastrados</h1>
+
+    <div class="table-responsive shadow-sm rounded-3">
+        <table class="table table-dark table-hover align-middle text-center">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Capitão</th>
+                    <th>Whatsapp</th>
+                </tr>
+            </thead>
+            <tbody>`;
+    
+    for (let i = 0; i < listaTime.length; i++) {
         conteudo += `
-                        </tbody>
-                    </table>
-                </div>
+            <tr>
+                <td>${listaTime[i].time}</td>
+                <td>${listaTime[i].capitao}</td>
+                <td>${listaTime[i].tel}</td>
+            </tr>`;
+    }
 
-                <a class="btn btn-secondary mt-3" href="/">Voltar</a>
+    conteudo += `
+            </tbody>
+        </table>
+    </div>
 
-            </div>
+    <a class="btn btn-secondary mt-3" href="/">Voltar</a>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-        </body>
-        </html>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
     `;
 
     resposta.send(conteudo);
@@ -619,6 +1068,89 @@ server.get("/logout", (requisicao,resposta) =>{
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>Logout</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+                <style>
+    <style>
+        :root {
+            --bg-preto: #000000;
+            --bg-escuro: #111111;
+            --texto-branco: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-preto);
+            color: var(--texto-branco);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            background-color: #000 ;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 0 10px #ffffff33;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffffff ;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #fff ;
+            text-shadow: 0 0 8px #ffffffbb;
+        }
+
+        .dropdown-menu {
+            background-color: #000;
+            border: 1px solid #fff;
+        }
+
+        .dropdown-menu a {
+            color: var(--texto-branco);
+        }
+
+        h1 {
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            background-color: #111;
+            text-shadow: 0 0 12px #ffffff55;
+        }
+
+        .bg-light {
+            background-color: #111 ;
+            color: #ffffff ;
+            border: 2px solid #ffffff33;
+        }
+
+        input {
+            background-color: #1a1a1a ;
+            color: #ffffff ;
+            border: 1px solid #555 ;
+        }
+
+        input::placeholder {
+            color: #bbbbbb ;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #e6e6e6;
+            box-shadow: 0 0 10px #ffffffaa;
+        }
+
+        .btn-secondary {
+            background-color: #222;
+            border: 1px solid #fff;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #111;
+            box-shadow: 0 0 10px #ffffff88;
+        }
+    </style>
         </head>
         <body>
             <div class="container">
@@ -631,7 +1163,6 @@ server.get("/logout", (requisicao,resposta) =>{
                     </div>
                 </div>
             </div>
-
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
         </body>
         </html>
@@ -640,64 +1171,160 @@ server.get("/logout", (requisicao,resposta) =>{
 
     server.get("/login",(requisicao, resposta)=>{
         resposta.send(`
-        <!doctype html>
-        <html lang="pt-br">
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Menu</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        </head>
-        <body>
-                <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="/">Menu</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Menu</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-preto: #000000;
+            --bg-escuro: #111111;
+            --texto-branco: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-preto);
+            color: var(--texto-branco);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            background-color: #000 ;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 0 10px #ffffff33;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffffff ;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #fff ;
+            text-shadow: 0 0 8px #ffffffbb;
+        }
+
+        .dropdown-menu {
+            background-color: #000;
+            border: 1px solid #fff;
+        }
+
+        .dropdown-menu a {
+            color: var(--texto-branco);
+        }
+
+        h1 {
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            background-color: #111;
+            text-shadow: 0 0 12px #ffffff55;
+        }
+
+        .bg-light {
+            background-color: #111 ;
+            color: #ffffff ;
+            border: 2px solid #ffffff33;
+        }
+
+        input {
+            background-color: #1a1a1a ;
+            color: #ffffff ;
+            border: 1px solid #555 ;
+        }
+
+        input::placeholder {
+            color: #bbbbbb ;
+        }
+        .form-box {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #ffffff22;
+            padding: 30px;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #e6e6e6;
+            box-shadow: 0 0 10px #ffffffaa;
+        }
+
+        .btn-secondary {
+            background-color: #222;
+            border: 1px solid #fff;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #111;
+            box-shadow: 0 0 10px #ffffff88;
+        }
+    </style>
+</head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Menu</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent">
                     <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                            <a class="nav-link" href="/">Home</a>
                         </li>
                         <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Cadastro
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="nav-link active" href="/cadastroTime">Cadastro Times</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/cadastroJogadores">Cadastro Jogadores</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/listaTime">Listar Times</a></li>
-                        </ul>
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                Cadastro
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/cadastroTime">Cadastro Times</a></li>
+                                <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro Jogadores</a></li>
+                                <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
+                            </ul>
+                        </li>]
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="/" href="/logout">Sair</a>
+                            <a class="nav-link" href="/logout">Sair</a>
                         </li>
                     </ul>
-                    </div>
                 </div>
-                </nav>
-                <div class="container">
-                <h1 class="text-center border m-3 p-3 bg-light">Login</h1>
-
-                <form method="POST" action="/login" class="m-3 p-4 bg-light rounded shadow-sm col-md-6 mx-auto">
-                    <div class="mb-3">
-                        <label for="usuario" class="form-label">Usuário</label>
-                        <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Digite seu usuário">
-                        </div>
-                    <div class="mb-3">
-                        <label for="senha" class="form-label">Senha</label>
-                        <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha">
-                    </div>
-
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Entrar</button>
-                        <a href="/" class="btn btn-secondary">Voltar</a>
-                    </div>
-                </form>
             </div>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-            </body>
-            </html>
+        </nav>
+
+        <div class="container">
+            <h1 class="text-center m-3 p-3">Login</h1>
+            <form method="POST" action="/login" class="form-box m-3 p-4 col-md-6 mx-auto">
+                <div class="mb-3">
+                    <label for="usuario" class="form-label">Usuário</label>
+                    <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Digite seu usuário">
+                </div>
+
+                <div class="mb-3">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha">
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                    <a href="/" class="btn btn-secondary">Voltar</a>
+                </div>
+            </form>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
             `)
     });
 
@@ -710,68 +1337,179 @@ server.get("/logout", (requisicao,resposta) =>{
     }
     else
     {let login =`
-        <!doctype html>
-        <html lang="pt-br">
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Menu</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        </head>
-        <body>
-                <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="/">Menu</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Menu</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-preto: #000000;
+            --bg-escuro: #111111;
+            --texto-branco: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-preto);
+            color: var(--texto-branco);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            background-color: #000 ;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 0 10px #ffffff33;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffffff ;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #fff ;
+            text-shadow: 0 0 8px #ffffffbb;
+        }
+
+        .dropdown-menu {
+            background-color: #000;
+            border: 1px solid #fff;
+        }
+
+        .dropdown-menu a {
+            color: var(--texto-branco);
+        }
+
+        h1 {
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            background-color: #111;
+            text-shadow: 0 0 12px #ffffff55;
+        }
+
+        .bg-light {
+            background-color: #111 ;
+            color: #ffffff ;
+            border: 2px solid #ffffff33;
+        }
+
+        input {
+            background-color: #1a1a1a ;
+            color: #ffffff ;
+            border: 1px solid #555 ;
+        }
+
+        input::placeholder {
+            color: #bbbbbb ;
+        }
+        .form-box {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #ffffff22;
+            padding: 30px;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #e6e6e6;
+            box-shadow: 0 0 10px #ffffffaa;
+        }
+
+        .btn-secondary {
+            background-color: #222;
+            border: 1px solid #fff;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #111;
+            box-shadow: 0 0 10px #ffffff88;
+        }
+    </style>
+</head>
+
+<body>
+
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+
+                <a class="navbar-brand" href="/">Menu</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent">
                     <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                            <a class="nav-link" href="/">Home</a>
                         </li>
+
                         <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Cadastro
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="nav-link active" href="/cadastroTime">Cadastro Times</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/cadastroJogadores">Cadastro Jogadores</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/listaTime">Listar Times</a></li>
-                        </ul>
-                        <li class="nav-item">
-                        <a class="nav-link active" aria-current="/" href="/logout">Sair</a>
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                Cadastro
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/cadastroTime">Cadastro Times</a></li>
+                                <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro Jogadores</a></li>
+                                <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
+                            </ul>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Sair</a>
+                        </li>
+
                     </ul>
-                    </div>
                 </div>
-                </nav>
-                <div class="container">
-                <h1 class="text-center border m-3 p-3 bg-light">Login</h1>
+            </div>
+        </nav>
 
-                <form method="POST" action="/login" class="m-3 p-4 bg-light rounded shadow-sm col-md-6 mx-auto">
-                    <div class="mb-3">
-                        <label for="usuario" class="form-label">Usuário</label>
-                        <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Digite seu usuário">
-                        </div>
-                    <div class="mb-3">
-                        <label for="senha" class="form-label">Senha</label>
-                        <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha">
-                    </div>
+        <div class="container">
 
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Entrar</button>
-                        <a href="/" class="btn btn-secondary">Voltar</a>
-                    </div>
-                
+            <h1 class="text-center m-3 p-3">Login</h1>
+
+            <form method="POST" action="/login" class="form-box m-3 p-4 col-md-6 mx-auto">
+
+                <div class="mb-3">
+                    <label for="usuario" class="form-label">Usuário</label>
+                    <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Digite seu usuário">
+                </div>
+
+                <div class="mb-3">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha">
+                </div>
                 <div class="col-12 mt-2">
                     <p class="text-danger">Usuario ou senha Invalido</p>
                 </div>
-                </form>
-            </div>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-            </body>
-            </html>`;
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                    <a href="/" class="btn btn-secondary">Voltar</a>
+                </div>
+
+            </form>
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>`;
             resposta.send(login);
             }
     });
