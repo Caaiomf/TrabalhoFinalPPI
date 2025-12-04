@@ -161,7 +161,7 @@ server.get("/", (requisicao, resposta) =>{
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Cadastro</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/cadastroEquipe">Cadastro Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroEquipes">Cadastro Times</a></li>
                             <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro Jogadores</a></li>
                             <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                         </ul>
@@ -311,7 +311,7 @@ server.get("/cadastroEquipes", (requisicao,resposta) =>{
                             Cadastro
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/cadastroEquipe">Cadastro de Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroEquipes">Cadastro de Times</a></li>
                             <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro de Jogadores</a></li>
                             <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                         </ul>
@@ -486,7 +486,7 @@ else {
                             Cadastro
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/cadastroEquipe">Cadastro de Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroEquipes">Cadastro de Times</a></li>
                             <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro de Jogadores</a></li>
                             <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                         </ul>
@@ -555,7 +555,7 @@ else {
 }
 });
 
-server.get("/cadastroJogadores", verificarUsuarioLogado, (requisicao,resposta) =>{
+server.get("/cadastroJogadores", (requisicao,resposta) =>{
 let revelatime = "";
 for (let i = 0; i < listaTime.length; i++) {
     revelatime += `<option value="${listaTime[i].time}">${listaTime[i].time}</option>`;
@@ -667,7 +667,7 @@ for (let i = 0; i < listaTime.length; i++) {
                             Cadastro
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/cadastroEquipe">Cadastro de Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroEquipes">Cadastro de Times</a></li>
                             <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro de Jogadores</a></li>
                             <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                         </ul>
@@ -868,7 +868,7 @@ for (let i = 0; i < listaTime.length; i++) {
                             Cadastro
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/cadastroEquipe">Cadastro de Times</a></li>
+                            <li><a class="dropdown-item" href="/cadastroEquipes">Cadastro de Times</a></li>
                             <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro de Jogadores</a></li>
                             <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                         </ul>
@@ -1089,7 +1089,7 @@ server.get("/listaTime", (requisicao, resposta) => {
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Cadastro</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/cadastroEquipe">Cadastro Times</a></li>
+                        <li><a class="dropdown-item" href="/cadastroEquipes">Cadastro Times</a></li>
                         <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro Jogadores</a></li>
                         <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                     </ul>
@@ -1143,9 +1143,12 @@ server.get("/listaTime", (requisicao, resposta) => {
             </thead>
             <tbody>`;
         const funcoes = ['top', 'jungle', 'mid', 'atirador', 'suporte'];
-        const jogadoresDoTime = listaJogador.filter(jogador => jogador.time === time.time );
-         for(const funcao of funcoes){
-            const jogador = jogadoresDoTime.find(j => j.funcoes.toLowerCase() === funcao);
+        for (let time of listaTime){
+        let jogadoresDoTime = listaJogador.filter(j => j.time === time.time);
+        let celulasJogadores = "";
+
+         for(let funcao of funcoes){
+            const jogador = jogadoresDoTime.find(j => (j.funcao || "").toLowerCase() === funcao);
 
             if(jogador){
                 celulasJogadores += `<td>${jogador.nickname}</td>`;
@@ -1153,6 +1156,13 @@ server.get("/listaTime", (requisicao, resposta) => {
                 celulasJogadores +=`<td>Vaga</td>`;
             }
          }
+         conteudo+=`
+        <tr>
+            <td>${time.time}</td>
+            <td>${time.capitao}</td>
+            ${celulasJogadores}
+        </tr>`
+        }
     conteudo += `
             </tbody>
         </table>
@@ -1390,7 +1400,7 @@ server.get("/logout", (requisicao,resposta) =>{
                                 Cadastro
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/cadastroEquipe">Cadastro Times</a></li>
+                                <li><a class="dropdown-item" href="/cadastroEquipes">Cadastro Times</a></li>
                                 <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro Jogadores</a></li>
                                 <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                             </ul>
@@ -1546,7 +1556,7 @@ server.get("/logout", (requisicao,resposta) =>{
                             </a>
 
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/cadastroEquipe">Cadastro Times</a></li>
+                                <li><a class="dropdown-item" href="/cadastroEquipes">Cadastro Times</a></li>
                                 <li><a class="dropdown-item" href="/cadastroJogadores">Cadastro Jogadores</a></li>
                                 <li><a class="dropdown-item" href="/listaTime">Listar Times</a></li>
                             </ul>
