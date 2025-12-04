@@ -40,7 +40,7 @@ server.use(express.urlencoded({extended: true}));
 //preparar o servidor a fim de processar os cookies
 server.use(cookieParser());
 
-server.get("/", (requisicao, resposta) =>{
+server.get("/",verificarUsuarioLogado, (requisicao, resposta) =>{
 //disponilizar o menu para o usuario
 //verificar a existencia do cookie
     let ultimoAcesso = requisicao.cookies?.ultimoAcesso;
@@ -199,7 +199,7 @@ server.get("/", (requisicao, resposta) =>{
         resposta.end();
 });
 
-server.get("/cadastroEquipes", (requisicao,resposta) =>{
+server.get("/cadastroEquipes",verificarUsuarioLogado, (requisicao,resposta) =>{
         resposta.send(`
 <!doctype html>
 <html lang="pt-br">
@@ -364,7 +364,7 @@ server.get("/cadastroEquipes", (requisicao,resposta) =>{
 `);
 });
 
-server.post("/cadastroEquipes", (requisicao, resposta) =>{
+server.post("/cadastroEquipes",verificarUsuarioLogado, (requisicao, resposta) =>{
 const time = requisicao.body.time;
 const capitao = requisicao.body.capitao;
 const tel = requisicao.body.tel;
@@ -555,7 +555,7 @@ else {
 }
 });
 
-server.get("/cadastroJogadores", (requisicao,resposta) =>{
+server.get("/cadastroJogadores",verificarUsuarioLogado, (requisicao,resposta) =>{
 let revelatime = "";
 for (let i = 0; i < listaTime.length; i++) {
     revelatime += `<option value="${listaTime[i].time}">${listaTime[i].time}</option>`;
@@ -740,7 +740,7 @@ for (let i = 0; i < listaTime.length; i++) {
 `);
 });
 
-server.post("/cadastroJogadores", (requisicao, resposta) =>{
+server.post("/cadastroJogadores",verificarUsuarioLogado, (requisicao, resposta) =>{
 const nomeJogador = requisicao.body.nomeJogador;
 const nickname = requisicao.body.nickname;
 const funcao = requisicao.body.funcao;
@@ -981,7 +981,7 @@ for (let i = 0; i < listaTime.length; i++) {
         resposta.send(conteudo);
 }
 });
-server.get("/listaTime", (requisicao, resposta) => {
+server.get("/listaTime",verificarUsuarioLogado, (requisicao, resposta) => {
     let conteudo = `
 <!doctype html>
 <html lang="pt-br">
@@ -1190,7 +1190,6 @@ server.get("/logout", (requisicao,resposta) =>{
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>Logout</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-                <style>
 <style>
         body {
             background-color: #000000;
@@ -1272,15 +1271,13 @@ server.get("/logout", (requisicao,resposta) =>{
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center border m-3 p-3 bg-light">Logout</h1>
-        
+        <h1 class="text-center border m-3 p-3 bg-dark-card">Logout</h1>
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6">
-                <div class="m-3 p-3 bg-light rounded shadow-sm">
+                <div class="m-3 p-3 bg-dark-card rounded shadow-sm">
                     <div class="col-md-12 text-center">
                         <p class="fs-5">Obrigado pela visita! Você foi desconectado.</p>
                         <a href="/login" class="btn btn-danger m-2">Fazer Login Novamente</a>
-                        <a href="/" class="btn btn-secondary m-2">Voltar para Home</a>
                     </div>
                 </div>
             </div>
